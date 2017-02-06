@@ -261,6 +261,7 @@ static int kszphy_config_init(struct phy_device *phydev)
 	struct kszphy_priv *priv = phydev->priv;
 	const struct kszphy_type *type;
 	int ret;
+	int temp = 0;
 
 	if (!priv)
 		return 0;
@@ -283,6 +284,11 @@ static int kszphy_config_init(struct phy_device *phydev)
 
 	if (priv->led_mode >= 0)
 		kszphy_setup_led(phydev, type->led_mode_reg, priv->led_mode);
+
+	/* disable PME */
+	temp = phy_read(phydev, 0x16);
+	temp &= ~(1 << 15);
+	phy_write(phydev, 0x16, temp);
 
 	return 0;
 }
