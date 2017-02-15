@@ -900,6 +900,13 @@
 		#clock-cells = <1>;
 	};
 
+	pistachio_irqwake: irq-wake {
+		compatible = "pistachio,irq-wake";
+		irq-start = <2>;
+		irq-end = <95>;
+		img,clk_core = <&clk_core>;
+	};
+
 	hash: hash@18149600 {
 		compatible = "img,hash-accelerator";
 		reg = <0x18149600 0x100>, <0x18101100 0x4>;
