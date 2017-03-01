@@ -30,8 +30,6 @@
 #include <linux/spinlock.h>
 #include <linux/timecounter.h>
 
-#include <linux/atu_clk.h>
-
 #include "pistachio-event-timer.h"
 #include "pistachio-event-timer-internal.h"
 
