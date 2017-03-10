@@ -954,20 +954,67 @@ struct snd_soc_dai *snd_soc_find_dai(
 	list_for_each_entry(component, &component_list, list) {
 		component_of_node = component->dev->of_node;
 		if (!component_of_node && component->dev->parent)
+{
+pr_info("%s:%d- component_of_node %p dlc->of_node %p\n",__FUNCTION__,__LINE__,component_of_node,dlc->of_node);
 			component_of_node = component->dev->parent->of_node;
+pr_info("%s:%d- component_of_node %p dlc->of_node %p\n",__FUNCTION__,__LINE__,component_of_node,dlc->of_node);
+}
+pr_info("%s:%d- component_of_node %p dlc->of_node %p\n",__FUNCTION__,__LINE__,component_of_node,dlc->of_node);
+if( dlc->name )
+	pr_info("%s:%d- dlc->name[%s]\n",__FUNCTION__,__LINE__,dlc->name);
+if( component->name )
+	pr_info("%s:%d- component->name[%s]\n",__FUNCTION__,__LINE__,component->name);
+if( dlc->dai_name )
+	pr_info("%s:%d- dlc->dai_name[%s]\n",__FUNCTION__,__LINE__,dlc->dai_name);
+if( dai->name )
+	pr_info("%s:%d- dai->name[%s]\n",__FUNCTION__,__LINE__,dai->name);
+
 
 		if (dlc->of_node && component_of_node != dlc->of_node)
+{
+pr_info("%s:%d- component_of_node %p dlc->of_node %p\n",__FUNCTION__,__LINE__,component_of_node,dlc->of_node);
 			continue;
+}
 		if (dlc->name && strcmp(component->name, dlc->name))
+{
+pr_info("%s:%d- component->name[%s] dlc->name[%s]\n",__FUNCTION__,__LINE__,component->name,dlc->name);
 			continue;
+}
 		list_for_each_entry(dai, &component->dai_list, list) {
 			if (dlc->dai_name && strcmp(dai->name, dlc->dai_name))
+{
+pr_info("%s:%d- dlc->dai_name[%s] dlc->name[%s]\n",__FUNCTION__,__LINE__,dlc->dai_name,dlc->name);
 				continue;
+}
+
+
+pr_info("%s:%d - In snd_soc_find_dai found dai\n",__FUNCTION__,__LINE__);
+if( dlc->name )
+	pr_info("%s:%d- dlc->name[%s]\n",__FUNCTION__,__LINE__,dlc->name);
+if( component->name )
+	pr_info("%s:%d- component->name[%s]\n",__FUNCTION__,__LINE__,component->name);
+if( dlc->dai_name )
+	pr_info("%s:%d- dlc->dai_name[%s]\n",__FUNCTION__,__LINE__,dlc->dai_name);
+if( dai->name )
+	pr_info("%s:%d- dai->name[%s]\n",__FUNCTION__,__LINE__,dai->name);
+if ( component_of_node )
+	pr_info("%s:%d- component_of_node %p dlc->of_node %p\n",__FUNCTION__,__LINE__,component_of_node,dlc->of_node);
+
 
 			return dai;
 		}
 	}
-
+pr_info("%s:%d - In snd_soc_find_dai returning NULL\n",__FUNCTION__,__LINE__);
+if( dlc->name )
+	pr_info("%s:%d- dlc->name[%s]\n",__FUNCTION__,__LINE__,dlc->name);
+if( component->name )
+	pr_info("%s:%d- component->name[%s]\n",__FUNCTION__,__LINE__,component->name);
+if( dlc->dai_name )
+	pr_info("%s:%d- dlc->dai_name[%s]\n",__FUNCTION__,__LINE__,dlc->dai_name);
+if( dai->name )
+	pr_info("%s:%d- dai->name[%s]\n",__FUNCTION__,__LINE__,dai->name);
+if ( component_of_node )
+	pr_info("%s:%d- component_of_node %p dlc->of_node %p\n",__FUNCTION__,__LINE__,component_of_node,dlc->of_node);
 	return NULL;
 }
 EXPORT_SYMBOL_GPL(snd_soc_find_dai);
@@ -1188,6 +1235,9 @@ static int snd_soc_init_multicodec(struct snd_soc_card *card,
 				GFP_KERNEL);
 		if (!dai_link->codecs)
 			return -ENOMEM;
+pr_info("%s:%d - dai_link->codec_name[%s]\n",__FUNCTION__,__LINE__,dai_link->codec_name);
+pr_info("%s:%d - dai_link->codec_of_node[%p]\n",__FUNCTION__,__LINE__,dai_link->codec_of_node);
+pr_info("%s:%d - dai_link->codec_dai_name[%s]\n",__FUNCTION__,__LINE__,dai_link->codec_dai_name);
 
 		dai_link->codecs[0].name = dai_link->codec_name;
 		dai_link->codecs[0].of_node = dai_link->codec_of_node;
@@ -1208,6 +1258,7 @@ static int soc_init_dai_link(struct snd_soc_card *card,
 	int i, ret;
 
 	ret = snd_soc_init_multicodec(card, link);
+pr_info("%s:%d - snd_soc_init_multicodec returned %u link->num_codecs[%u] card->num_links[%u]\n",__FUNCTION__,__LINE__,ret,link->num_codecs,card->num_links);
 	if (ret) {
 		dev_err(card->dev, "ASoC: failed to init multicodec\n");
 		return ret;
@@ -1224,12 +1275,17 @@ static int soc_init_dai_link(struct snd_soc_card *card,
 				link->name);
 			return -EINVAL;
 		}
+		else
+			pr_info("%s:%d - link->codecs[%u].name=[%s]\n",__FUNCTION__,__LINE__,i,link->codecs[i].name);
+
 		/* Codec DAI name must be specified */
 		if (!link->codecs[i].dai_name) {
 			dev_err(card->dev, "ASoC: codec_dai_name not set for %s\n",
 				link->name);
 			return -EINVAL;
 		}
+		else
+			pr_info("%s:%d - link->codecs[%u].dai_name=[%s]\n",__FUNCTION__,__LINE__,i,link->codecs[i].dai_name);
 	}
 
 	/*
@@ -1265,6 +1321,9 @@ static int soc_init_dai_link(struct snd_soc_card *card,
 			link->name);
 		return -EINVAL;
 	}
+	else
+		pr_info("%s:%d - link->cpu_dai_name=[%s] link->cpu_name[%s] link->cpu_of_node[%p]\n",__FUNCTION__,__LINE__,link->cpu_dai_name, link->cpu_name, link->cpu_of_node);
+
 
 	return 0;
 }
@@ -1853,6 +1912,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 	/* bind DAIs */
 	for (i = 0; i < card->num_links; i++) {
 		ret = soc_bind_dai_link(card, &card->dai_link[i]);
+pr_info("%s:%d - soc_bind_dai_link returned %u\n",__FUNCTION__,__LINE__,ret);
 		if (ret != 0)
 			goto base_error;
 	}
@@ -1860,6 +1920,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 	/* bind aux_devs too */
 	for (i = 0; i < card->num_aux_devs; i++) {
 		ret = soc_bind_aux_dev(card, i);
+pr_info("%s:%d - soc_bind_aux_dev returned %u\n",__FUNCTION__,__LINE__,ret);
 		if (ret != 0)
 			goto base_error;
 	}
@@ -1873,6 +1934,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 		if (codec->cache_init)
 			continue;
 		ret = snd_soc_init_codec_cache(codec);
+pr_info("%s:%d - snd_soc_init_codec_cache returned %u\n",__FUNCTION__,__LINE__,ret);
 		if (ret < 0)
 			goto base_error;
 	}
@@ -1880,6 +1942,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 	/* card bind complete so register a sound card */
 	ret = snd_card_new(card->dev, SNDRV_DEFAULT_IDX1, SNDRV_DEFAULT_STR1,
 			card->owner, 0, &card->snd_card);
+pr_info("%s:%d - snd_card_new returned %u\n",__FUNCTION__,__LINE__,ret);
 	if (ret < 0) {
 		dev_err(card->dev,
 			"ASoC: can't create sound card for card %s: %d\n",
@@ -1914,6 +1977,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 	/* initialise the sound card only once */
 	if (card->probe) {
 		ret = card->probe(card);
+pr_info("%s:%d - card->probe returned %u\n",__FUNCTION__,__LINE__,ret);
 		if (ret < 0)
 			goto card_probe_error;
 	}
@@ -1923,6 +1987,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 			order++) {
 		list_for_each_entry(rtd, &card->rtd_list, list) {
 			ret = soc_probe_link_components(card, rtd, order);
+pr_info("%s:%d - soc_probe_link_components returned %u\n",__FUNCTION__,__LINE__,ret);
 			if (ret < 0) {
 				dev_err(card->dev,
 					"ASoC: failed to instantiate card %d\n",
@@ -1934,6 +1999,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 
 	/* probe auxiliary components */
 	ret = soc_probe_aux_devices(card);
+pr_info("%s:%d - soc_probe_aux_devices returned %u\n",__FUNCTION__,__LINE__,ret);
 	if (ret < 0)
 		goto probe_dai_err;
 
@@ -1945,9 +2011,11 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 			continue;
 
 		ret = soc_init_dai_link(card, dai_link);
+pr_info("%s:%d - soc_init_dai_link returned %u\n",__FUNCTION__,__LINE__,ret);
 		if (ret)
 			goto probe_dai_err;
 		ret = soc_bind_dai_link(card, dai_link);
+pr_info("%s:%d - soc_bind_dai_link returned %u\n",__FUNCTION__,__LINE__,ret);
 		if (ret)
 			goto probe_dai_err;
 	}
@@ -1957,6 +2025,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 			order++) {
 		list_for_each_entry(rtd, &card->rtd_list, list) {
 			ret = soc_probe_link_dais(card, rtd, order);
+pr_info("%s:%d - soc_probe_link_dais returned %u\n",__FUNCTION__,__LINE__,ret);
 			if (ret < 0) {
 				dev_err(card->dev,
 					"ASoC: failed to instantiate card %d\n",
@@ -2001,6 +2070,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 
 	if (card->late_probe) {
 		ret = card->late_probe(card);
+pr_info("%s:%d - card->late_probe returned %u\n",__FUNCTION__,__LINE__,ret);
 		if (ret < 0) {
 			dev_err(card->dev, "ASoC: %s late_probe() failed: %d\n",
 				card->name, ret);
@@ -2011,6 +2081,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 	snd_soc_dapm_new_widgets(card);
 
 	ret = snd_card_register(card->snd_card);
+pr_info("%s:%d - snd_card_register returned %u\n",__FUNCTION__,__LINE__,ret);
 	if (ret < 0) {
 		dev_err(card->dev, "ASoC: failed to register soundcard %d\n",
 				ret);
@@ -2022,6 +2093,7 @@ static int snd_soc_instantiate_card(struct snd_soc_card *card)
 	mutex_unlock(&card->mutex);
 	mutex_unlock(&client_mutex);
 
+pr_info("%s:%d - In snd_soc_instantiate_card returning %u\n",__FUNCTION__,__LINE__,ret);
 	return 0;
 
 probe_aux_dev_err:
@@ -2616,10 +2688,12 @@ int snd_soc_register_card(struct snd_soc_card *card)
 	if (!card->name || !card->dev)
 		return -EINVAL;
 
+pr_info("%s:%d - card->name[%s] card->num_links=%u\n",__FUNCTION__,__LINE__,card->name,card->num_links);
 	for (i = 0; i < card->num_links; i++) {
 		struct snd_soc_dai_link *link = &card->dai_link[i];
 
 		ret = soc_init_dai_link(card, link);
+pr_info("%s:%d - soc_init_dai_link returned %u num_links %u\n",__FUNCTION__,__LINE__,ret,card->num_links);
 		if (ret) {
 			dev_err(card->dev, "ASoC: failed to init link %s\n",
 				link->name);
@@ -2644,6 +2718,7 @@ int snd_soc_register_card(struct snd_soc_card *card)
 	mutex_init(&card->dapm_mutex);
 
 	ret = snd_soc_instantiate_card(card);
+pr_info("%s:%d - snd_soc_instantiate_card returned %u\n",__FUNCTION__,__LINE__,ret);
 	if (ret != 0)
 		return ret;
 
@@ -2661,6 +2736,7 @@ int snd_soc_register_card(struct snd_soc_card *card)
 		if (!cpu_dai->active)
 			pinctrl_pm_select_sleep_state(cpu_dai->dev);
 	}
+pr_info("%s:%d - In snd_soc_register_card returning %u\n",__FUNCTION__,__LINE__,ret);
 
 	return ret;
 }

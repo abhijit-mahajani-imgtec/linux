@@ -1334,6 +1334,7 @@ static int pistachio_card_prefixes(struct pistachio_card *pbc,
 	struct snd_soc_codec_conf *conf, *c;
 
 	n = codec_info->unique_codecs;
+pr_info("%s:%d- codec_info->unique_codecs[%u]\n",__FUNCTION__,__LINE__,codec_info->unique_codecs);
 
 	if (parallel_out)
 		n++;
@@ -1346,6 +1347,7 @@ static int pistachio_card_prefixes(struct pistachio_card *pbc,
 
 	codecs = codec_info->codecs;
 
+pr_info("%s:%d- n[%u] codec_info->total_codecs[%u] codec_info->unique_codecs[%u]\n",__FUNCTION__,__LINE__,n,codec_info->total_codecs,codec_info->unique_codecs);
 	size = sizeof(*pbc->card.codec_conf) * n;
 	pbc->card.codec_conf = devm_kzalloc(pbc->card.dev, size, GFP_KERNEL);
 	if (!pbc->card.codec_conf)
@@ -1438,25 +1440,40 @@ static int pistachio_card_parse_of(struct device_node *node,
 	}
 
 	spdif_out_np = of_get_child_by_name(node, "spdif-out");
+pr_info("%s:%d- spdif_out_np %p\n",__FUNCTION__,__LINE__,spdif_out_np);
 	if (spdif_out_np)
+{
 		pbc->card.num_links++;
-
+pr_info("%s:%d- pbc->card.num_links[%u]\n",__FUNCTION__,__LINE__,pbc->card.num_links);
+}
 	spdif_in_np = of_get_child_by_name(node, "spdif-in");
+pr_info("%s:%d- spdif_in_np %p\n",__FUNCTION__,__LINE__,spdif_in_np);
 	if (spdif_in_np)
+{
 		pbc->card.num_links++;
-
+pr_info("%s:%d- pbc->card.num_links[%u]\n",__FUNCTION__,__LINE__,pbc->card.num_links);
+}
 	parallel_out_np = of_get_child_by_name(node, "parallel-out");
+pr_info("%s:%d- parallel_out_np %p\n",__FUNCTION__,__LINE__,parallel_out_np);
 	if (parallel_out_np)
+{
 		pbc->card.num_links++;
-
+pr_info("%s:%d- pbc->card.num_links[%u]\n",__FUNCTION__,__LINE__,pbc->card.num_links);
+}
 	i2s_out_np = of_get_child_by_name(node, "i2s-out");
+pr_info("%s:%d- i2s_out_np %p\n",__FUNCTION__,__LINE__,i2s_out_np);
 	if (i2s_out_np)
+{
 		pbc->card.num_links++;
-
+pr_info("%s:%d- pbc->card.num_links[%u]\n",__FUNCTION__,__LINE__,pbc->card.num_links);
+}
 	i2s_in_np = of_get_child_by_name(node, "i2s-in");
+pr_info("%s:%d- i2s_in_np %p\n",__FUNCTION__,__LINE__,i2s_in_np);
 	if (i2s_in_np)
+{
 		pbc->card.num_links++;
-
+pr_info("%s:%d- pbc->card.num_links[%u]\n",__FUNCTION__,__LINE__,pbc->card.num_links);
+}
 	i2s_loopback = of_property_read_bool(node, "img,i2s-clk-loopback");
 	if (i2s_loopback && (!i2s_out_np || !i2s_in_np)) {
 		dev_err(dev, "img,i2s-clk-loopback specified when i2s-out/i2s-in are not present\n");
@@ -1487,6 +1504,7 @@ static int pistachio_card_parse_of(struct device_node *node,
 		if (ret)
 			goto end;
 		link++;
+pr_info("%s:%d- link[%p] link->cpu_of_node[%p] link->name[%s]\n",__FUNCTION__,__LINE__,link,link->cpu_of_node,link->name);
 	}
 
 	if (spdif_in_np) {
@@ -1494,6 +1512,7 @@ static int pistachio_card_parse_of(struct device_node *node,
 		if (ret)
 			goto end;
 		link++;
+pr_info("%s:%d- link[%p] link->cpu_of_node[%p] link->name[%s]\n",__FUNCTION__,__LINE__,link,link->cpu_of_node,link->name);
 	}
 
 	if (parallel_out_np) {
@@ -1503,6 +1522,7 @@ static int pistachio_card_parse_of(struct device_node *node,
 			goto end;
 
 		prl_out = link++;
+pr_info("%s:%d- link[%p] link->cpu_of_node[%p] link->name[%s]\n",__FUNCTION__,__LINE__,link,link->cpu_of_node,link->name);
 	} else {
 		prl_out = NULL;
 	}
@@ -1514,6 +1534,7 @@ static int pistachio_card_parse_of(struct device_node *node,
 			goto end;
 
 		i2s_out = link++;
+pr_info("%s:%d- link[%p] link->cpu_of_node[%p] link->name[%s]\n",__FUNCTION__,__LINE__,link,link->cpu_of_node,link->name);
 	} else {
 		i2s_out = NULL;
 	}
@@ -1525,10 +1546,12 @@ static int pistachio_card_parse_of(struct device_node *node,
 			goto end;
 
 		i2s_in = link;
+pr_info("%s:%d- link[%p] link->cpu_of_node[%p] link->name[%s]\n",__FUNCTION__,__LINE__,link,link->cpu_of_node,link->name);
 	} else {
 		i2s_in = NULL;
 	}
 
+pr_info("%s:%d- codec_info.unique_codecs[%u] codec_info.total_codecs[%u]\n",__FUNCTION__,__LINE__,codec_info.unique_codecs,codec_info.total_codecs);
 	ret = pistachio_card_prefixes(pbc, &codec_info, i2s_out,
 				      i2s_in, prl_out);
 	if (ret)
